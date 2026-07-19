@@ -1,0 +1,21 @@
+// voltmap constraints
+
+CREATE CONSTRAINT substation_id IF NOT EXISTS
+FOR (s:Substation)
+REQUIRE s.id IS UNIQUE;
+
+CREATE CONSTRAINT feeder_id IF NOT EXISTS
+FOR (f:Feeder)
+REQUIRE f.id IS UNIQUE;
+
+CREATE CONSTRAINT transformer_id IF NOT EXISTS
+FOR (t:Transformer)
+REQUIRE t.id IS UNIQUE;
+
+CREATE CONSTRAINT switch_id IF NOT EXISTS
+FOR (s:Switch)
+REQUIRE s.id IS UNIQUE;
+
+CREATE CONSTRAINT customer_id IF NOT EXISTS
+FOR (c:Customer)
+REQUIRE c.id IS UNIQUE;
