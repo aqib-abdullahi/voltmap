@@ -2,9 +2,13 @@
 VoltMap Generator
 Main entry point.
 """
+import random
+import config
 from topology import TopologyGenerator
 from validator import Validator, ValidationError
 from exporter import CypherExporter
+from constraints import ConstraintExporter
+from statistics import Statistics
 
 
 OUTPUT_FILE = "generated_dataset.cypher"
@@ -16,6 +20,8 @@ def main():
     print("VoltMap Network Generator")
     print("=" * 50)
 
+    print("Initializing random seed...")
+    random.seed(config.RANDOM_SEED)
     
     print("\nGenerating network...")
     topology = TopologyGenerator().generate()
@@ -34,7 +40,8 @@ def main():
     print("Exporting Neo4j dataset...")
     exporter = CypherExporter(topology)
     exporter.export(OUTPUT_FILE)
-    print("Export Complete ✓")
+    ConstraintExporter().export("constraints.cypher")
+    print("Export Complete.")
 
     print("\nNetwork Summary")
     print("-" * 30)
@@ -50,6 +57,18 @@ def main():
     print("\nOutput")
     print("-" * 30)
     print(OUTPUT_FILE)
+    
+    stats = Statistics(topology)
+    print()
+    print("Network Metrics")
+    print("-" * 30)
+
+    print(f"Total line length (m): {stats.total_line_length():.2f}")
+    print(f"Average line length (m): {stats.average_line_length():.2f}")
+    print(
+        f"Average customers/transformer: "
+        f"{stats.average_customers_per_transformer():.2f}"
+    )
 
     print("\nDone.")
 
