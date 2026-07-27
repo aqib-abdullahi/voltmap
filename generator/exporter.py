@@ -3,6 +3,8 @@ VoltMap Generator
 Exports the generated network to Neo4j Cypher.
 """
 from pathlib import Path
+import config
+from datetime import datetime
 
 
 class CypherExporter:
@@ -32,6 +34,11 @@ class CypherExporter:
     def _write_header(self):
         self._add("// VoltMap Generated Dataset")
         self._add("// Generated Automatically")
+        self._add("//")
+        self._add(f"//Version : {config.VERSION}")
+        self._add(f"//Seed    : {config.RANDOM_SEED}")
+        self._add(f"//Date    : {datetime.now().isoformat()}")
+        self._add(f"//CIM    : Simplified Distribution Profile")
         self._add()
 
     def _export_substations(self):
