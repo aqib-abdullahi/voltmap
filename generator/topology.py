@@ -3,18 +3,18 @@ VoltMap Generator
 Topology generation engine.
 Creates an in-memory electrical distribution network.
 """
-from models import (
+from .models import (
     Substation,
     Feeder,
     LineSegment,
     Pole,
     Switch,
     Transformer,
-    Customer,
+    Customer
 )
-from ids import IDGenerator
-import config, rules, random
-
+from .ids import IDGenerator
+from . import config, rules
+import random
 
 class TopologyGenerator:
 

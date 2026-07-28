@@ -4,7 +4,7 @@ Main entry point.
 """
 import random
 import config
-from topology import TopologyGenerator
+from .topology import TopologyGenerator
 from validator import Validator, ValidationError
 from exporter import CypherExporter
 from constraints import ConstraintExporter
