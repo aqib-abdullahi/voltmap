@@ -3,7 +3,7 @@ VoltMap Generator
 Exports the generated network to Neo4j Cypher.
 """
 from pathlib import Path
-import config
+from . import config
 from datetime import datetime
 
 
