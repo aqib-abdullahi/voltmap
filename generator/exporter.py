@@ -3,7 +3,7 @@ VoltMap Generator
 Exports the generated network to Neo4j Cypher.
 """
 from pathlib import Path
-from . import config
+import config
 from datetime import datetime
 
 
@@ -44,7 +44,7 @@ class CypherExporter:
     def _export_substations(self):
         self._add("// Substations")
         
-        for s in self.topology.substations:
+        for s in self.topology.network.substations:
             self._add(
                 f'''MERGE (:Substation {{
                     id:"{s.id}",
@@ -58,7 +58,7 @@ class CypherExporter:
     def _export_feeders(self):
         self._add("// Feeders")
 
-        for f in self.topology.feeders:
+        for f in self.topology.network.feeders:
             self._add(
                 f'''MERGE (:Feeder {{
                     id:"{f.id}",
@@ -72,7 +72,7 @@ class CypherExporter:
     def _export_line_segments(self):
         self._add("// Line Segments")
         
-        for l in self.topology.line_segments:
+        for l in self.topology.network.line_segments:
             self._add(
                 f'''MERGE (:LineSegment {{
                     id:"{l.id}",
@@ -87,7 +87,7 @@ class CypherExporter:
     def _export_poles(self):
         self._add("// Poles")
 
-        for p in self.topology.poles:
+        for p in self.topology.network.poles:
 
             self._add(
                 f'''MERGE (:Pole {{
@@ -102,7 +102,7 @@ class CypherExporter:
     def _export_switches(self):
         self._add("// Switches")
         
-        for s in self.topology.switches:
+        for s in self.topology.network.switches:
             self._add(
                 f'''MERGE (:Switch {{
                     id:"{s.id}",
@@ -116,7 +116,7 @@ class CypherExporter:
     def _export_transformers(self):
         self._add("// Transformers")
 
-        for t in self.topology.transformers:
+        for t in self.topology.network.transformers:
             self._add(
                 f'''MERGE (:Transformer {{
                     id:"{t.id}",
@@ -129,7 +129,7 @@ class CypherExporter:
     def _export_customers(self):
         self._add("// Customers")
         
-        for c in self.topology.customers:
+        for c in self.topology.network.customers:
             self._add(
                 f'''MERGE (:Customer {{
                     id:"{c.id}",
@@ -146,7 +146,7 @@ class CypherExporter:
         self._add("// Relationships")
 
         # Substation -> Feeder
-        for feeder in self.topology.feeders:
+        for feeder in self.topology.network.feeders:
 
             self._add(f"""
             MATCH (s:Substation {{id:'{feeder.source.id}'}})
@@ -155,7 +155,7 @@ class CypherExporter:
             """)
 
         # Feeder -> LineSegment
-        for feeder in self.topology.feeders:
+        for feeder in self.topology.network.feeders:
             for line in feeder.line_segments:
 
                 self._add(f"""
@@ -165,7 +165,7 @@ class CypherExporter:
                 """)
 
         # LineSegment -> Pole
-        for line in self.topology.line_segments:
+        for line in self.topology.network.line_segments:
             # if line.terminal_pole:
             #     self._add(f"""
             #     MATCH (l:LineSegment {{id:'{line.id}'}})
@@ -180,14 +180,14 @@ class CypherExporter:
                     """)
 
         # Mounted assets
-        for transformer in self.topology.transformers:
+        for transformer in self.topology.network.transformers:
             self._add(f"""
             MATCH (t:Transformer {{id:'{transformer.id}'}})
             MATCH (p:Pole {{id:'{transformer.mounted_on.id}'}})
             MERGE (t)-[:MOUNTED_ON]->(p);
             """)
 
-        for switch in self.topology.switches:
+        for switch in self.topology.network.switches:
             self._add(f"""
             MATCH (s:Switch {{id:'{switch.id}'}})
             MATCH (p:Pole {{id:'{switch.mounted_on.id}'}})
@@ -195,7 +195,7 @@ class CypherExporter:
             """)
 
         # Transformer -> Customer
-        for transformer in self.topology.transformers:
+        for transformer in self.topology.network.transformers:
             for customer in transformer.customers:
                 self._add(f"""
                 MATCH (t:Transformer {{id:'{transformer.id}'}})

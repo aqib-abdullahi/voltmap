@@ -4,17 +4,20 @@ Main entry point.
 """
 import random
 import config
-from .topology import TopologyGenerator
+from topology import TopologyGenerator
 from validator import Validator, ValidationError
 from exporter import CypherExporter
 from constraints import ConstraintExporter
 from statistics import Statistics
+from settings import GeneratorConfig
 
 
 OUTPUT_FILE = "generated_dataset.cypher"
 
 
 def main():
+    
+    cfg = GeneratorConfig()
 
     print("=" * 50)
     print("VoltMap Network Generator")
@@ -24,12 +27,12 @@ def main():
     random.seed(config.RANDOM_SEED)
     
     print("\nGenerating network...")
-    topology = TopologyGenerator().generate()
+    network = TopologyGenerator(cfg).generate()
 
     
     print("Validating network...")
     try:
-        Validator(topology).validate()
+        Validator(network).validate()
     except ValidationError as error:
         print("\nValidation Failed\n")
         print(error)
@@ -38,7 +41,7 @@ def main():
     print("Validation Passed ✓")
 
     print("Exporting Neo4j dataset...")
-    exporter = CypherExporter(topology)
+    exporter = CypherExporter(network)
     exporter.export(OUTPUT_FILE)
     ConstraintExporter().export("constraints.cypher")
     print("Export Complete.")
@@ -46,19 +49,19 @@ def main():
     print("\nNetwork Summary")
     print("-" * 30)
 
-    print(f"Substations   : {len(topology.substations)}")
-    print(f"Feeders       : {len(topology.feeders)}")
-    print(f"Line Segments : {len(topology.line_segments)}")
-    print(f"Poles         : {len(topology.poles)}")
-    print(f"Switches      : {len(topology.switches)}")
-    print(f"Transformers  : {len(topology.transformers)}")
-    print(f"Customers     : {len(topology.customers)}")
+    print(f"Substations   : {len(network.network.substations)}")
+    print(f"Feeders       : {len(network.network.feeders)}")
+    print(f"Line Segments : {len(network.network.line_segments)}")
+    print(f"Poles         : {len(network.network.poles)}")
+    print(f"Switches      : {len(network.network.switches)}")
+    print(f"Transformers  : {len(network.network.transformers)}")
+    print(f"Customers     : {len(network.network.customers)}")
 
     print("\nOutput")
     print("-" * 30)
     print(OUTPUT_FILE)
     
-    stats = Statistics(topology)
+    stats = Statistics(network)
     print()
     print("Network Metrics")
     print("-" * 30)

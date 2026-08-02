@@ -3,9 +3,9 @@ VoltMap Engineering Rules
 """
 
 # Voltage Levels
-SUBSTATION_VOLTAGE = 33
-FEEDER_VOLTAGE = 11
-SERVICE_VOLTAGE = 0.415
+# SUBSTATION_VOLTAGE = 33
+# FEEDER_VOLTAGE = 11
+# SERVICE_VOLTAGE = 0.415
 
 # Infrastructure Placement Rules
 TRANSFORMER_INTERVAL = 5      # Every 5 poles

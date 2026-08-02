@@ -3,7 +3,7 @@ VoltMap Generator
 Topology generation engine.
 Creates an in-memory electrical distribution network.
 """
-from .models import (
+from models import (
     Substation,
     Feeder,
     LineSegment,
@@ -12,24 +12,28 @@ from .models import (
     Transformer,
     Customer
 )
-from .ids import IDGenerator
-from . import config, rules
+from ids import IDGenerator
+import config, rules
 import random
+from settings import GeneratorConfig
+from network import Network
 
 class TopologyGenerator:
 
-    def __init__(self):
+    def __init__(self, config=None):
+        self.config = GeneratorConfig()
         self.ids = IDGenerator()
-        self.substations = []
-        self.feeders = []
-        self.line_segments = []
-        self.poles = []
-        self.switches = []
-        self.transformers = []
-        self.customers = []
+        # self.substations = []
+        # self.feeders = []
+        # self.line_segments = []
+        # self.poles = []
+        # self.switches = []
+        # self.transformers = []
+        # self.customers = []
+        self.network = Network()
     
     def generate(self):
-        for _ in range(config.NUM_SUBSTATIONS):
+        for _ in range(self.config.num_substations):
             self._create_substation()
 
         return self
@@ -38,28 +42,28 @@ class TopologyGenerator:
         substation = Substation(
             id=self.ids.next("SS"),
             name="Distribution Substation",
-            voltage_kV=33,
+            voltage_kV=(self.config.substation_voltage_kv),
             location="Synthetic"
         )
-        self.substations.append(substation)
+        self.network.substations.append(substation)
 
-        for _ in range(config.FEEDERS_PER_SUBSTATION):
+        for _ in range(self.config.feeders_per_substation):
             self._create_feeder(substation)
 
     def _create_feeder(self, substation):
         feeder = Feeder(
             id=self.ids.next("F"),
             name="Feeder",
-            voltage_kV=11,
+            voltage_kV=self.config.feeder_voltage_kv,
             length_km=0,
             source=substation
         )
         substation.feeders.append(feeder)
-        self.feeders.append(feeder)
+        self.network.feeders.append(feeder)
 
         # for _ in range(config.LINE_SEGMENTS_PER_FEEDER):
         #     self._create_line_segment(feeder, i + 1)
-        for segment_index in range(config.LINE_SEGMENTS_PER_FEEDER):
+        for segment_index in range(self.config.line_segments_per_feeder):
             self._create_line_segment(feeder, segment_index + 1)
 
     def _create_line_segment(self, feeder, segment_index):
@@ -70,14 +74,14 @@ class TopologyGenerator:
         line = LineSegment(
             id=self.ids.next("LS"),
             name="Line Segment",
-            voltage_kV=11,
+            voltage_kV=self.config.feeder_voltage_kv,
             length_m=length,
             conductor_type="AAC",
             conductor_size_mm2=100
         )
         line.feeder = feeder
         feeder.line_segments.append(line)
-        self.line_segments.append(line)
+        self.network.line_segments.append(line)
         self._create_pole(line, segment_index)
         # for pole_index in range(config.POLES_PER_LINE_SEGMENT):
         #     self._create_pole(line, segment_index, pole_index + 1)        
@@ -93,7 +97,7 @@ class TopologyGenerator:
         )
         # line.terminal_pole = pole
         line.poles.append(pole)
-        self.poles.append(pole)
+        self.network.poles.append(pole)
         # self._create_switch(pole)
         # pole_index = len(self.poles)
         if segment_index % rules.SECTION_SWITCH_INTERVAL == 0:
@@ -109,11 +113,11 @@ class TopologyGenerator:
             switch_type="Load Break Switch",
             status="CLOSED",
             normally_closed=True,
-            voltage_kV=11,
+            voltage_kV=(self.config.feeder_voltage_kv),
             mounted_on=pole
         )
         pole.mounted_assets.append(switch)
-        self.switches.append(switch)
+        self.network.switches.append(switch)
     
     def _create_transformer(self, pole):
         transformer = Transformer(
@@ -127,7 +131,7 @@ class TopologyGenerator:
             mounted_on=pole
         )
         pole.mounted_assets.append(transformer)
-        self.transformers.append(transformer)
+        self.network.transformers.append(transformer)
 
         count = random.randint(
             rules.MIN_CUSTOMERS,
@@ -148,5 +152,4 @@ class TopologyGenerator:
             transformer=transformer
         )
         transformer.customers.append(customer)
-        self.customers.append(customer)
-
+        self.network.customers.append(customer)

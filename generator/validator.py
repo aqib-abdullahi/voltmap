@@ -37,13 +37,13 @@ class Validator:
 
     def _all_assets(self):
         return (
-            self.topology.substations
-            + self.topology.feeders
-            + self.topology.line_segments
-            + self.topology.poles
-            + self.topology.switches
-            + self.topology.transformers
-            + self.topology.customers
+            self.topology.network.substations
+            + self.topology.network.feeders
+            + self.topology.network.line_segments
+            + self.topology.network.poles
+            + self.topology.network.switches
+            + self.topology.network.transformers
+            + self.topology.network.customers
         )
 
     def _validate_unique_ids(self):
@@ -60,7 +60,7 @@ class Validator:
             )
 
     def _validate_feeders(self):
-        for feeder in self.topology.feeders:
+        for feeder in self.topology.network.feeders:
             if feeder.source is None:
                 self.errors.append(
                     f"{feeder.id} has no source substation."
@@ -78,7 +78,7 @@ class Validator:
     #                 f"{line.id} has no terminal pole."
     #             )
     def _validate_line_segments(self):
-        for line in self.topology.line_segments:
+        for line in self.topology.network.line_segments:
             if line.feeder is None:
                 self.errors.append(
                     f"{line.id} is not assigned to a feeder."
@@ -101,7 +101,7 @@ class Validator:
         #         )
 
     def _validate_transformers(self):
-        for transformer in self.topology.transformers:
+        for transformer in self.topology.network.transformers:
             if transformer.mounted_on is None:
                 self.errors.append(
                     f"{transformer.id} is not mounted on a pole."
@@ -113,7 +113,7 @@ class Validator:
                 )
 
     def _validate_customers(self):
-        for customer in self.topology.customers:
+        for customer in self.topology.network.customers:
             if customer.transformer is None:
                 self.errors.append(
                     f"{customer.id} has no supplying transformer."
