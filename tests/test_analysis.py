@@ -20,7 +20,7 @@ class TestNetworkAnalyzer(unittest.TestCase):
 
     def test_transformer_has_customers(self):
 
-        transformer = self.network.network.transformers[0]
+        transformer = self.network.transformers[0]
         customers = self.analyzer.customer_of_transformer(
             transformer.id
         )
@@ -28,7 +28,7 @@ class TestNetworkAnalyzer(unittest.TestCase):
 
     def test_customer_has_transformer(self):
 
-        customer = self.network.network.customers[0]
+        customer = self.network.customers[0]
         transformer = (
             self.analyzer.transformer_of_customer(
                 customer.id
@@ -38,14 +38,14 @@ class TestNetworkAnalyzer(unittest.TestCase):
 
     def test_feeder_has_customers(self):
         
-        feeder = self.network.network.feeders[0]
+        feeder = self.network.feeders[0]
         customers = self.analyzer.customer_of_feeder(
             feeder.id
         )
         self.assertGreater(len(customers), 0)
     
     def test_path_to_customer(self):
-        customer = self.network.network.customers[0]
+        customer = self.network.customers[0]
         path = self.analyzer.path_to_customer(customer.id)
         self.assertEqual(len(path), 6)
         self.assertEqual(path[-1].id, customer.id)
@@ -53,7 +53,7 @@ class TestNetworkAnalyzer(unittest.TestCase):
 
     def test_customer_connectivity(self):
 
-        customer = self.network.network.customers[0]
+        customer = self.network.customers[0]
         self.assertTrue(
             self.analyzer.is_customer_connected(
                 customer.id

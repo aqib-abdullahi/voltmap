@@ -1,18 +1,3 @@
-# """
-# Simplified IEC CIM profile supported by VoltMap.
-# """
-
-# from enum import Enum
-
-
-# class CIMClass(str, Enum):
-#     SUBSTATION = "Substation"
-#     FEEDER = "Feeder"
-#     AC_LINE_SEGMENT = "ACLineSegment"
-#     POLE = "Pole"
-#     SWITCH = "Switch"
-#     POWER_TRANSFORMER = "PowerTransformer"
-#     ENERGY_CONSUMER = "EnergyConsumer"
 """
 IEC Common Information Model (CIM)
 Supported profile for VoltMap.

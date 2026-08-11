@@ -38,7 +38,7 @@ class TopologyGenerator:
         for _ in range(self.config.num_substations):
             self._create_substation()
 
-        return self
+        return self.network
     
     def _create_substation(self):
         substation = Substation(

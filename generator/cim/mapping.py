@@ -1,33 +1,6 @@
-# """
-# VoltMap → IEC CIM mapping.
-# """
-
-# from models import (
-#     Substation,
-#     Feeder,
-#     LineSegment,
-#     Pole,
-#     Switch,
-#     Transformer,
-#     Customer,
-# )
-
-# from .profile import CIMClass
-
-
-# CIM_MAPPING = {
-#     Substation: CIMClass.SUBSTATION,
-#     Feeder: CIMClass.FEEDER,
-#     LineSegment: CIMClass.AC_LINE_SEGMENT,
-#     Pole: CIMClass.POLE,
-#     Switch: CIMClass.SWITCH,
-#     Transformer: CIMClass.POWER_TRANSFORMER,
-#     Customer: CIMClass.ENERGY_CONSUMER,
-# }
-
-# def cim_class(asset):
-
-#     return CIM_MAPPING[type(asset)]
+"""
+VoltMap → IEC CIM mapping.
+"""
 
 from .profile import (
     SUBSTATION,

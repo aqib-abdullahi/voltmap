@@ -27,7 +27,7 @@ class NetworkAnalyzer:
         #     if customer.transformer_id == transformer_id
         # ]
 
-        for transformer in self.network.network.transformers:
+        for transformer in self.network.transformers:
             if transformer.id == transformer_id:
                 return list(transformer.customers)
         return []
@@ -36,7 +36,7 @@ class NetworkAnalyzer:
         """
         Returns the transformer connected to the given customer.
         """
-        for customer in self.network.network.customers:
+        for customer in self.network.customers:
             if customer.id == customer_id:
                 return customer.transformer
         return None
@@ -49,35 +49,14 @@ class NetworkAnalyzer:
             if substation.id == substation_id:
                 return list(substation.feeders)
         return []
-    
-    # Downstream analysis
-    # def customer_of_feeder(self, feeder_id):
-    #     """
-    #     Returns all downstream of a feeder.
-    #     """
-    #     for feeder in self.network.network.feeders:
-    #         if feeder.id != feeder_id:
-    #             # return list(feeder.customers)
-    #             continue
-            
-    #         customers = []
-    #         for line in feeder.line_segments:
-    #             for pole in line.poles:
-    #                 for asset in pole.mounted_assets:
-    #                     # if asset.__class__.__name__ == "Customer":
-    #                     #     customers.append(asset)
-    #                     if hasattr(asset, "customer"):
-    #                         customers.extend(asset.customer)
-    #         return customers                
-        
-    #     return []
+
     def customer_of_feeder(self, feeder_id):
         """
         Return all customers supplied downstream
         of a feeder.
         """
         feeder = None
-        for candidate in self.network.network.feeders:
+        for candidate in self.network.feeders:
             if candidate.id == feeder_id:
                 feeder = candidate
                 break
@@ -119,8 +98,7 @@ class NetworkAnalyzer:
         """
 
         customer = None
-
-        for candidate in self.network.network.customers:
+        for candidate in self.network.customers:
 
             if candidate.id == customer_id:
                 customer = candidate
@@ -167,7 +145,7 @@ class NetworkAnalyzer:
         """
         Returns the line segment containing the given pole.
         """
-        for line in self.network.network.line_segments:
+        for line in self.network.line_segments:
             if pole in line.poles:
                 return line
         return None
@@ -203,7 +181,7 @@ class NetworkAnalyzer:
         Returns a list of customers that are not connected to a substation.
         """
         disconnected = []
-        for customer in self.network.network.customers:
+        for customer in self.network.customers:
             if not self.is_customer_connected(customer.id):
                 disconnected.append(customer)
         
