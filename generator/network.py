@@ -5,7 +5,7 @@ Represents a complete synthetic distribution network.
 
 from dataclasses import dataclass, field
 
-from models import (
+from .models import (
     Substation,
     Feeder,
     LineSegment,
