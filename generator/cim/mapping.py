@@ -36,7 +36,10 @@ def cim_entity(asset):
     """
     Get the CIM entity corresponding to a VoltMap asset.
     """
-    return MODEL_TO_CIM[type(asset)]
+    try:
+        return MODEL_TO_CIM[type(asset)]
+    except KeyError as e:
+        raise ValueError(f"No CIM mapping defined for asset type: {type(asset).__name__}") from e
 
 def cim_name(asset):
     """

@@ -1,7 +1,7 @@
 """
 Validate that every VoltMap asset has a CIM mapping.
 """
-from .mapping import CIM_MAPPING
+from .mapping import MODEL_TO_CIM
 
 
 class CIMValidator:
@@ -20,6 +20,6 @@ class CIMValidator:
         ):
 
             for asset in collection:
-                if type(asset) not in CIM_MAPPING:
+                if type(asset) not in MODEL_TO_CIM:
                     missing.append(asset)
         return missing
