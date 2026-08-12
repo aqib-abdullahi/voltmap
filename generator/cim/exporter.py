@@ -18,9 +18,7 @@ class CIMCypherExporter:
 
     def __init__(self, network):
         self.network = network
-        self.topology = CIMTopologyBuilder(
-            network
-        ).build()
+        self.topology = CIMTopologyBuilder(network).build()
 
         self.lines = []
 

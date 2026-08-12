@@ -25,9 +25,21 @@ class Substation(Asset):
 @dataclass
 class Feeder(Asset):
     voltage_kV: float
-    length_km: float
+    # length_km: lambda self: sum(line.length_m for line in self.line_segments) / 1000
     source: Optional[Substation] = None
     line_segments: List["LineSegment"] = field(default_factory=list)
+    
+    @property
+    def length_km(self):
+        """
+        Total feeder length in kilometres.
+        """
+        total_length_m = sum(
+            line.length_m
+            for line in self.line_segments
+        )
+
+        return total_length_m / 1000
 
 
 @dataclass

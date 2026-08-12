@@ -57,8 +57,7 @@ class TopologyGenerator:
             id=self.ids.next("F"),
             name="Feeder",
             voltage_kV=self.config.feeder_voltage_kv,
-            length_km=0,
-            source=substation
+            source=substation,
         )
         substation.feeders.append(feeder)
         self.network.feeders.append(feeder)

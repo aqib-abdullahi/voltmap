@@ -237,4 +237,4 @@ README.md
 
 #generated dataset
 generated_dataset.cypher
-
+*.cypher
